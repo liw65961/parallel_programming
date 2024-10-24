@@ -24,14 +24,14 @@ Markdown 提供了多種優點，特別是在編寫技術文件或簡單報告�
 
 Markdown 支援六級標題，通過 `#` 的數量來區分。例如：
 
-\```markdown
+```markdown
 # 一級標題
 ## 二級標題
 ### 級標題
-\```markdown
+```
 
 ## 插入代碼塊
-\```python
+```python
 print("Hello, World!")
-\```
+```
 
