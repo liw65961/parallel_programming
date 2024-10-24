@@ -1,48 +1,36 @@
-# Data Science HW3
+# 報告範例
 
-## TODO
-* model.py
-  * implement your own node classification model
-* train.py
-  * setup your model
+## 1. 簡介
 
-## You can create the environment with anaconda
-```
-conda create --name hw3 pip -y
-conda activate hw3
-```
-## Install packages
-* scipy, networkx
-```
-pip install scipy networkx
-```
-* Install dgl
-  * https://www.dgl.ai/pages/start.html
-  * recommend 2.0.0
+本報告旨在介紹Markdown語法及其在日常文書處理中的應用。Markdown 是一種輕量級標記語言，廣泛應用於文件編輯、筆記和博客等領域。它結構簡單且易於學習，對於快速書寫和格式化內容非常有用。
 
-* Install pytorch
-  * https://pytorch.org/get-started/locally/
-  * recommend 2.2.0
+---
 
-## Run sample code
-```python
-python3 train.py --es_iters 30 --epochs 300 --use_gpu
-```
+## 2. 使用 Markdown 的優點
 
-## Dataset
-* Unknown graph data
-  * Label Split:
-    * Train: 60, Valid: 600, Test: 1200
-* File name description
-```
-  dataset
-  │   ├── private_features.pkl # node feature
-  │   ├── private_graph.pkl # graph edges
-  │   ├── private_num_classes.pkl # number of classes
-  │   ├── private_test_labels.pkl # X
-  │   ├── private_test_mask.pkl # nodes indices of testing set
-  │   ├── private_train_labels.pkl # nodes labels of training set
-  │   ├── private_train_mask.pkl # nodes indices of training set
-  │   ├── private_val_labels.pkl # nodes labels of validation set
-  │   └── private_val_mask.pkl # nodes indices of validation set
-```
+Markdown 提供了多種優點，特別是在編寫技術文件或簡單報告時：
+
+1. **簡單易學**：語法簡單，學習曲線低。
+2. **可讀性高**：即使不轉換為其他格式，Markdown 文檔本身也易於閱讀。
+3. **跨平台兼容**：可輕鬆轉換為 HTML、PDF 等格式。
+
+以下是一些常見的Markdown元素：
+
+---
+
+## 3. 常見 Markdown 語法示例
+
+### 3.1 標題
+
+Markdown 支援六級標題，通過 `#` 的數量來區分。例如：
+
+```markdown
+# 一級標題
+## 二級標題
+### 級標題
+
+## 插入代碼塊
+\```python
+print("Hello, World!")
+\```
+
