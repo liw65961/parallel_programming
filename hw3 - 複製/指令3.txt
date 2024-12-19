@@ -1,0 +1,57 @@
+module load rocm cuda
+
+chmod +x wrapper.sh
+
+# Single-GPU
+srun -N1 -n1 --gres=gpu:1 ./hw3-2 ./testcases/c01.1 ./output/c01.1.out
+
+# Multi-GPU
+srun -N1 -n1 -c2 --gres=gpu:2 ./hw3-3 ./testcases/c01.1 ./output/c01.1.out
+
+#Blocking factor
+#Memory share global
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof --metrics shared_load_throughput,shared_store_throughput,gld_throughput,gst_throughput ./hw3-2 ./testcases/c10.1 ./output/c10.1.out
+
+#GOPS
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof --metrics inst_integer,issue_slot_utilization ./hw3-2 ./testcases/c10.1 ./output/c10.1.out
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof ./hw3-2 ./testcases/c10.1 ./output/c10.1.out
+
+
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof --metrics achieved_occupancy,sm_efficiency ./hw3-2 ./testcases/c10.1 ./output/c10.1.out
+
+#Optimization
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof ./hw3-2 ./testcases/p11k1 ./output/p11k1.out
+
+#Weak scability
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof ./hw3-3 ../hw3-2/testcases/p17k1 ./output/p17k1.out
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof ./hw3-2 ./testcases/p12k1 ./output/p12k1.out
+
+#Time distribution
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof ./hw3-2 ./testcases/p12k1 ./output/p12k1.out
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof ./hw3-2 ./testcases/p20k1 ./output/p20k1.out
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof ./hw3-2 ./testcases/p25k1 ./output/p25k1.out
+
+# compiling AMD
+module load rocm cuda
+hipify-clang hw3-2.cu
+make hw3-2-amd
+
+hipify-clang hw3-3.cu
+make hw3-3-amd
+
+#CUDA v.s. AMD
+#hw3-2
+srun -p nvidia -N1 -n1 --gres=gpu:1 ./hw3-2 ./testcases/p12k1 ./output/p12k1.out
+srun -p amd --gres=gpu:1 ./hw3-2-amd ./testcases/p12k1 ./output/p12k1.out
+srun -p nvidia -N1 -n1 --gres=gpu:1 ./hw3-2 ./testcases/p20k1 ./output/p20k1.out
+srun -p amd --gres=gpu:1 ./hw3-2-amd ./testcases/p20k1 ./output/p20k1.out
+srun -p nvidia -N1 -n1 --gres=gpu:1 ./hw3-2 ./testcases/p25k1 ./output/p25k1.out
+srun -p amd --gres=gpu:1 ./hw3-2-amd ./testcases/p25k1 ./output/p25k1.out
+#hw3-3
+srun -N1 -n1 -c2 --gres=gpu:2 ./hw3-3 ../hw3-2/testcases/p12k1 ./output/p12k1.out
+srun -p amd --gres=gpu:2 ./hw3-3-amd ../hw3-2/testcases/p12k1 ./output/p12k1.out
+srun -N1 -n1 -c2 --gres=gpu:2 ./hw3-3 ../hw3-2/testcases/p20k1 ./output/p20k1.out
+srun -p amd --gres=gpu:2 ./hw3-3-amd ../hw3-2/testcases/p20k1 ./output/p20k1.out
+srun -N1 -n1 -c2 --gres=gpu:2 ./hw3-3 ../hw3-2/testcases/p25k1 ./output/p25k1.out
+srun -p amd --gres=gpu:2 ./hw3-3-amd ../hw3-2/testcases/p25k1 ./output/p25k1.out
+
