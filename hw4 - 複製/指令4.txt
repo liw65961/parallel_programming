@@ -1,0 +1,64 @@
+module load rocm cuda
+
+# Single-GPU
+(B, N, d): (500, 2048, 64)
+srun -N1 -n1 --gres=gpu:1 ./hw4 ./testcases/t22 ./output/t22.out
+(B, N, d): (2000, 256, 64)
+srun -N1 -n1 --gres=gpu:1 ./hw4 ./testcases/t14 ./output/t14.out
+(B, N, d): (30, 8192, 32)
+srun -N1 -n1 --gres=gpu:1 ./hw4 ./testcases/t25 ./output/t25.out
+
+#share_mem 11~14
+
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof --metrics achieved_occupancy,sm_efficiency ./hw4 ./testcases/t14 ./output/t14.out
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof --metrics achieved_occupancy,sm_efficiency ./hw4 ./testcases/t25 ./output/t25.out
+
+
+#Memory share global
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof --metrics gld_throughput,gst_throughput ./hw4 ./testcases/t14 ./output/t14.out
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof --metrics gld_throughput,gst_throughput ./hw4 ./testcases/t25 ./output/t25.out
+
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof --metrics shared_load_throughput,shared_store_throughput ./hw4 ./testcases/t14 ./output/t14.out
+
+
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof --metrics gld_throughput,gst_throughput,shared_load_throughput,shared_store_throughput ./hw4 ./testcases/t14 ./output/t14.out
+
+#GOPS
+srun -p nvidia -N1 -n1 nvprof --metrics flop_count_sp ./hw4 ./testcases/t14 ./output/t14.out
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof ./hw4 ./testcases/t14 ./output/t14.out
+
+srun -p nvidia -N1 -n1 nvprof --metrics flop_count_sp ./hw4 ./testcases/t25 ./output/t25.out
+srun -p nvidia -N1 -n1 --gres=gpu:1 nvprof ./hw4 ./testcases/t25 ./output/t25.out
+
+
+#Time distribution
+(B, N, d): (2000, 256, 64)
+srun -p nvidia -N1 -n1 --gres=gpu:1 ./hw4 ./testcases/t14 ./output/t14.out
+(B, N, d): (500, 2048, 64)
+srun -p nvidia -N1 -n1 --gres=gpu:1 ./hw4 ./testcases/t22 ./output/t22.out
+(B, N, d): (10, 16384, 32)
+srun -p nvidia -N1 -n1 --gres=gpu:1 ./hw4 ./testcases/t27 ./output/t27.out
+
+#Optimization
+(B, N, d): (6400, 256, 32)
+srun -p nvidia -N1 -n1 --gres=gpu:1 ./hw4 ./testcases/t13 ./output/t13.out
+
+
+# compiling AMD
+module load rocm cuda
+hipify-clang hw4.cu
+make hw4-amd
+
+
+#CUDA v.s. AMD
+srun -p nvidia -N1 -n1 --gres=gpu:1 ./hw4 ./testcases/t14 ./output/t14.out
+srun -p amd --gres=gpu:1 ./hw4 ./testcases/t14 ./output/t14.out
+srun -p nvidia -N1 -n1 --gres=gpu:1 ./hw4 ./testcases/t25 ./output/t25.out
+srun -p amd --gres=gpu:1 ./hw4 ./testcases/t25 ./output/t25.out
+
+srun -p nvidia -N1 -n1 --gres=gpu:1 ./hw4 ./testcases/t03 ./output/t03.out
+srun -p amd --gres=gpu:1 ./hw4 ./testcases/t03 ./output/t03.out
+
+
+
+
